@@ -1,0 +1,383 @@
+-*- org-src-preserve-indentation: t -*-
+#+TITLE: Makefile for copula factor model
+(setq org-src-preserve-indentation t)
+#+OPTIONS: ^:nil
+
+* Theory
+Targets:
+As targets, we will chose any relevant data, together with any
+information that we draw from this data:
+- data
+- pictures
+- tables
+- presentation outputs: html, latex, ...
+- applications
+
+
+** Data
+
+At the core of the research project always lies a sequence of
+computationally demanding scripts that produce the data. These scripts
+are usually stored in the directory *./process_data*. Furthermore, all
+data scripts should produce data exclusively, and any visualizations
+as a means to get a feeling for the data should always be in separate
+files. This way, the core of the project will be specified robustly in
+a clear sequence of computational steps, while any second-layer
+visualization scripts could be dealt with in a more automatic manner.
+Also, the core of the project should completely match the outline
+diagram. Never make any changes in the pure exported code files, but
+only in the code blocks embedded in the analysis.
+
+** Graphics
+
+As I am very fond of visualizations, any research project usually
+involves a bunch of graphics that need to be produced. Hence, I want
+to automate this process a bit, such that it is not necessary to
+manually include every figure as a target into the Makefile.
+Therefore, we must enable GNU Make to automatically find the link
+between graphics and the script for its creation. This can be achieved
+by letting graphics and script share some pattern for the file name.
+In addition to that, however, we do not want to have one script per
+graphics, but also situations where we get multiple graphics with one
+script. Hence, the convention will be as follows: every graphics
+created from a script will be uniquely identified with a combination
+of script file name and a number. For example, for a given script
+*creation.R*, all associated graphics must follow the naming
+convention *creation-1.pdf*, *creation-2.pdf*, and so forth.
+
+** org-mode: tangling code
+
+In order to avoid the risks associated with code duplicity, any line
+of code may only exist once! Hence, whenever some parts of code should
+be published together with explanatory text, the code must be written
+in tangled org-babel source code blocks and only exported into files.
+Be careful to tangle all source code blocks that are relevant for a
+given computational script. Nevertheless, on the other hand, also
+avoid touching too many files, which would result in unnecessary
+computations with GNU Make.
+
+* Setup
+
+By default, GNU Make will always build the first target of a Makefile
+if called without additional arguments. Hence, this target should
+rather be some high-level output, comprising all individual targets to
+be built. The definition of such a high-level output usually already
+refers to some low-level variables as well, which need to be already
+known by GNU Make at the time that they are referred to. Hence, we
+first need to determine all constituting low-level targets. The
+recipes for creation are allowed to follow only afterwards.
+
+** Directories
+
+First, one needs to set up the project directories, to tell GNU Make
+where the target files should be looked for. Also, we need to point to
+the directory of the scripts that are necessary to generate the
+graphics.
+#+BEGIN_SRC makefile :tangle ./Makefile
+# gnu makefile for cfm
+
+PROJ_DIR := .
+PICS_DIR := pics
+DATA_DIR := data
+JL_DIR := jlib
+R_LIB := rlib
+R_PICS := rpics
+
+#+END_SRC
+
+Since "at the end of the line" comments do not work in GNU Makefile,
+a description of what the individual folders should contain is
+followed here:
+- PICS_DIR: storage of re-creatable pictures
+- DATA_DIR: storage re-creatable data
+- R_PICS: R code for re-creatable pictures 
+- R_LIB: library of R utilities
+- JL_DIR: library of Julia utilities
+
+For publication with org-mode, I sometimes need to run some
+pre-processing of the org-mode files upfront. The required processing
+functions are in emacs-lisp, and GNU Make needs to know about their
+location as well:
+#+BEGIN_SRC makefile :tangle ./Makefile
+# include relevant emacs lisp files for publication
+LISP_SITE := /home/chris/.emacs.d/extensions/own_commands.el
+#+END_SRC
+
+** Specify data targets
+
+For clarity, data targets are better grouped into related subparts,
+instead of keeping them in one large opaque list. For me, there
+usually already arises some arrangement related to the decomposition
+into individual blog posts. Once the target files are defined for each
+subpart, we throw them together and prepend the file directory.
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+############################################################
+############## SPECIFY MAIN DATA FOR EACH PROCESSING SCRIPT:
+############################################################
+
+SP500_DOWNLOAD := all_sp500_price_data.csv all_sp500_clean_logRet.csv
+SP500_GARCH := standResid.csv estimatedSigmas.csv
+SP500_SECTORS := sectorAffiliation.csv
+DATA_NAMES := $(SP500_DOWNLOAD) $(SP500_GARCH) $(SP500_SECTORS)
+DATA_FULL_NAMES := $(addprefix $(DATA_DIR)/,$(DATA_NAMES))
+
+#+END_SRC
+
+** Specify picture targets
+
+As already mentioned, the challenge at this step will be to enable GNU
+Make to automatically determine the graphics targets, together with
+the recipes that are required for creation. As first guess, one might
+think that one could simply list all the files in the picture
+directory, and find the associated script for creation through pattern
+matching of file names. However, this approach is to simplistic, and
+would only enable you to update already existing graphics files. For
+example, when listing the files in the directory, you might get
+./pics/missing_values-1.pdf, ./pics/missing_values-2.pdf and
+./pics/missing_values-3.pdf. Then, with pattern matching you will find
+the underlying script file, ./rpics/missing_values.R, and execute it
+in order to update the graphics. However, let's assume that the
+graphics file are not yet present in the graphics directory yet. If
+you keep to this sequence of action, you will not find any target
+files in the first step, since your directory is empty. Hence, there
+simply will be no pattern matching and execution of the underlying
+script. Hence, it will not work this way.
+
+Instead, you need to make use of the property that the underlying
+script files are always present, as they are not targets themselves.
+Hence, you need to get the list of script files in your directory, and
+derive the graphics file from them. Only then, you can follow the
+steps described above: for each target, find the underlying script
+through pattern matching of file names, and execute it for creation.
+
+However, there is still one problem with this approach. We want to
+allow a given script file to produce more than just one graphics file.
+Hence, GNU Make would actually need to know, how many targets to
+create for any given script file. Once it found
+./rpics/missing_values.R in the script directory, does it need to
+create a target for ./pics/missingValues-1.pdf only, or also for
+./pics/missingValues-2.pdf, ./pics/missing_values-2.pdf and more?
+
+This is something that we will not try to implement in a bulletproof
+manner, but which we simply will circumvent by focusing on the first
+target graphics only. Hence, we only run the script file in case that
+./pics/missing_values-1.pdf is not yet present or needs to be updated.
+This should be sufficient for most of the cases, as all graphics from
+a common script file should usually be simultaneously created anyways.
+Nevertheless, if one manually deleted ./pics/missing_values-3.pdf, GNU
+Make would not automatically execute the script, as it only checks for
+presence of ./pics/missing_values-1.pdf. 
+
+For most practical matters, this sloppiness should be okay.
+Nevertheless, we still may want to permit ourselves an additional
+emergency protection. Thus, we will implement a way to delete all
+graphics files, so that we could start from scratch in case that our
+graphics files did get messed up.
+
+Still, however, at this point we did not take into account that our
+graphics could be produced from different statistical software. As
+long as we only rely on R, it is easy to derive the recipe for the
+target: we simply need to run the associated R script. However, in
+case of multiple software languages, we need to be able to further
+distinguish between files created with different languages. Hence,
+scripts of different languages need to be stored in separate
+directories, so that we can keep track of the language in a variable.
+At the end, pdf files that match any of the files in a list of R
+files, RPICS_FILE_NAMES, will have a different recipe than files that
+match with MPICS_FILE_NAMES. We will need to take this into account in
+the recipes.
+
+Now, the code for graphics file in our Makefile reads as follows.
+First, get the names of all files in the directory where our R
+graphics script files are stored. From these files, we extract the
+file name only, with directory path our file extension. For file
+./rpics/missing_values.R, we get *missing_values* only. Then, we
+create *missing_values-1.pdf* as target, and prepend the picture
+directory. We also keep track of the pattern missing_values-*.pdf, in
+order to able to delete all graphics files if necessary.
+
+#+BEGIN_SRC  makefile :tangle ./Makefile
+################################################
+############## CREATION OF PDFS
+################################################
+
+# get list of all rpics files
+RPICS_SCRIPTS_NAMES := $(notdir $(wildcard $(R_PICS)/*.R))
+RPICS_FILE_NAMES := $(patsubst %.R,%-1.pdf,$(RPICS_SCRIPTS_NAMES))
+#RPICS_FILE_NAMES := missing_values-1.pdf visualize_volatilities-1.pdf market_trend_power-1.pdf
+RPICS_FULL_NAMES := $(addprefix $(PICS_DIR)/,$(RPICS_FILE_NAMES)) 
+
+RPICS_FILE_NAMES_FOR_DELETION := $(patsubst %.R,%-*.pdf,$(RPICS_SCRIPTS_NAMES))
+
+#ALL_PICS_FULL_NAMES := $(RPICS_FULL_NAMES) $(MPICS_FULL_NAMES) $(JLPICS_FULL_NAMES)
+ALL_PICS_FULL_NAMES := $(RPICS_FULL_NAMES)
+
+#+END_SRC
+
+
+* High-level targets
+
+Now that all low-level targets have been specified, we can make use of
+the variables in order to create our high-level default target. It
+will be implemented as a phony target, such that all of its
+dependencies will always be checked when called. Phony targets are
+more robust, since accidentally creating a file of equal name (in this
+case: "all") in the directory will not confuse GNU Make.
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+# hierarchically highest target:
+all: $(DATA_FULL_NAMES) $(ALL_PICS_FULL_NAMES)
+.PHONY: all
+#+END_SRC
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+# phony target to create all data
+.PHONY: data
+data: $(DATA_FULL_NAMES)
+#+END_SRC
+
+
+* Data creation sequence
+
+The data files lie at the very core of the project. Individual data
+files are interrelated, so that they need to be created in a certain
+sequential order. Thus, it is really hard to come up with some
+procedure to automatically create the recipes for the data files. The
+recipes hence will be listed manually. For each target data, you will
+need to specify all the data that it depends on, as well as the script
+file that is required for its computation.
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+###############################################
+############## CREATION OF MAIN_DATA:
+###############################################
+
+$(DATA_DIR)/all_sp500_price_data.csv: raw_data/sp500_constituents.csv process_data/download_sp500_data.R
+	R CMD BATCH process_data/download_sp500_data.R 
+	cp $@ ~/Dropbox/research_databases/cfm/data/
+
+$(DATA_DIR)/all_sp500_clean_logRet.csv: $(DATA_DIR)/all_sp500_price_data.csv process_data/sp500_clean_rets.R
+	R CMD BATCH process_data/sp500_clean_rets.R 
+	cp $@ ~/Dropbox/research_databases/cfm/data/
+
+$(DATA_DIR)/standResid.csv: $(DATA_DIR)/all_sp500_clean_logRet.csv process_data/sp500_estimate_garch.R
+	R CMD BATCH process_data/sp500_estimate_garch.R
+	cp $@ ~/Dropbox/research_databases/cfm/data/
+
+$(DATA_DIR)/estimatedSigmas.csv: $(DATA_DIR)/all_sp500_clean_logRet.csv process_data/sp500_estimate_garch.R
+	R CMD BATCH process_data/sp500_estimate_garch.R
+	cp $@ ~/Dropbox/research_databases/cfm/data/
+
+$(DATA_DIR)/sectorAffiliation.csv: process_data/sp500_sectors.R $(DATA_DIR)/all_sp500_clean_logRet.csv raw_data/sp500_sector_constituents.csv 
+	R CMD BATCH $<
+	cp $@ ~/Dropbox/research_databases/cfm/data/
+
+
+#+END_SRC
+
+* Graphics recipes
+
+In contrast to the data files, there is no sequential order required
+here. Once the data files are created, the graphics scripts can be
+executed in any arbitrary order. However, we still need to make sure
+that all data was updated before. Hence, at the beginning of each rule
+we first make sure that the complete data is accurate.
+
+For each graphics file, we then have only one dependency: its
+underlying script file. As mentioned earlier, we only list the first
+graphics associated with each graphics script in our targets: for
+./rpics/missing_values.R this would be ./pics/missing_values-1.pdf.
+For this file, we then first need to find the underlying script file
+through pattern matching, before we can execute it as batch command.
+Thereby, $< is an automatic variable, representing the first
+prerequisite.
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+# recipe for r graphics
+$(addprefix $(PICS_DIR)/,$(RPICS_FILE_NAMES)): $(PICS_DIR)/%-1.pdf: $(R_PICS)/%.R
+	make data
+	R CMD BATCH $<
+
+# recipe for matlab graphics: preliminary!
+$(addprefix $(PICS_DIR)/,$(MPICS_FILE_NAMES)): $(PICS_DIR)/%-1.pdf: $(R_PICS)/%.m
+	make data
+	matlab $<
+
+#+END_SRC
+
+* Presentation outputs
+
+- blog posts
+- html files for individual sub-parts
+- slide-shows 
+- one large file consisting of all individual blog posts
+- one large file that will build on figures and tables created by the
+  individual blog posts, but that will be more rigorously following
+  scientific standards so that it could be handed in as a thesis
+- copying files to dropbox to make them publicly available
+
+** Thesis output
+Here, the thesis output will be created in the file cfm_main.org, but
+shall be available as file copula_factor_models.pdf.
+
+#+BEGIN_SRC makefile :tangle ./Makefile
+# specify overall pdf document output
+MAIN_FILE := copula_factor_models.pdf
+# generated overall pdf output, with wrong name
+MID_TARGET := cfm_main.pdf
+
+$(MAIN_FILE): $(MID_TARGET)
+	cp $^ $@
+
+# create pdf document from latex file
+$(MID_TARGET): cfm_main.org $(ALL_PICS_FILE_NAMES)
+	emacs --batch --visit=cfm_main.org --load $(LISP_SITE) --funcall cg/change-latex-src-headers --funcall org-export-as-pdf
+
+#+END_SRC
+
+
+
+* Other helpful phony targets
+#+BEGIN_SRC makefile :tangle ./Makefile
+# additional targets:
+# TAGS files
+# datasets
+# executable files
+# benchmark results
+# unit tests
+
+print-%:
+	@echo '$*=$($*)'
+
+# help - The default goal
+.PHONY: help
+help:
+	$(MAKE) --print-data-base --question
+
+.PHONY: clean
+clean:
+	rm -f $(MID_TARGET)
+	rm -f Makefile~
+	rm -f $(basename $(MID_TARGET)).tex~
+	rm -f $(basename $(MID_TARGET)).bbl
+	rm -f $(basename $(MID_TARGET)).blg
+
+.PHONY: view
+view:
+	make
+	okular $(MAIN_FILE) &
+
+
+# in case pics-3.pdf has been deleted, while pics-1.pdf still exists,
+# updating rule for figures does not reproduce pics-3.pdf
+.PHONY: renew_all_r_pics
+renew_all_r_pics:
+	cd pics; rm -v $(RPICS_FILE_NAMES_FOR_DELETION); cd ../; make
+
+new:
+	rm -f $(MID_TARGET)
+	rm -f $(MAIN_FILE)
+	make
+
+#+END_SRC
