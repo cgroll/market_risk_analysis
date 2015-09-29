@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:gadfly="http://www.gadflyjl.org/ns"
+     version="1.2"
+     width="120mm" height="120mm" viewBox="0 0 120 120"
+     stroke="none"
+     fill="#000000"
+     stroke-width="0.3"
+     font-size="3.88"
+>
+<g class="plotroot xscalable yscalable" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-1">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-2">
+    <text x="66.48" y="112" text-anchor="middle"># observations</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-3">
+    <text x="19.96" y="104.39" text-anchor="middle">0</text>
+    <text x="50.97" y="104.39" text-anchor="middle">5000</text>
+    <text x="81.99" y="104.39" text-anchor="middle">10000</text>
+    <text x="113" y="104.39" text-anchor="middle">15000</text>
+  </g>
+  <g clip-path="url(#fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-5)" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-4">
+    <g pointer-events="visible" opacity="1" fill="#000000" fill-opacity="0.000" stroke="#000000" stroke-opacity="0.000" class="guide background" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-6">
+      <rect x="17.96" y="5" width="97.04" height="95.72"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-7">
+      <path fill="none" d="M17.96,98.71 L 115 98.71"/>
+      <path fill="none" d="M17.96,75.79 L 115 75.79"/>
+      <path fill="none" d="M17.96,52.86 L 115 52.86"/>
+      <path fill="none" d="M17.96,29.93 L 115 29.93"/>
+      <path fill="none" d="M17.96,7 L 115 7"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-8">
+      <path fill="none" d="M19.96,5 L 19.96 100.72"/>
+      <path fill="none" d="M50.97,5 L 50.97 100.72"/>
+      <path fill="none" d="M81.99,5 L 81.99 100.72"/>
+      <path fill="none" d="M113,5 L 113 100.72"/>
+    </g>
+    <g class="plotpanel" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-9">
+      <g shape-rendering="crispEdges" stroke-width="0.3" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-10">
+        <g stroke="#000000" stroke-opacity="0.000" fill="#00BFFF" class="geometry" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-11">
+          <rect x="20.32" y="82.66" width="4.18" height="16.05"/>
+          <rect x="24.5" y="83.81" width="4.18" height="14.9"/>
+          <rect x="28.68" y="88.4" width="4.18" height="10.32"/>
+          <rect x="32.86" y="74.64" width="4.18" height="24.08"/>
+          <rect x="37.04" y="83.81" width="4.18" height="14.9"/>
+          <rect x="41.22" y="66.61" width="4.18" height="32.1"/>
+          <rect x="45.4" y="60.88" width="4.18" height="37.83"/>
+          <rect x="49.58" y="58.59" width="4.18" height="40.13"/>
+          <rect x="53.76" y="36.81" width="4.18" height="61.91"/>
+          <rect x="57.94" y="40.25" width="4.18" height="58.47"/>
+          <rect x="62.12" y="27.64" width="4.18" height="71.08"/>
+          <rect x="66.31" y="26.49" width="4.18" height="72.23"/>
+          <rect x="70.49" y="48.27" width="4.18" height="50.44"/>
+          <rect x="74.67" y="88.4" width="4.18" height="10.32"/>
+          <rect x="78.85" y="89.54" width="4.18" height="9.17"/>
+          <rect x="83.03" y="92.98" width="4.18" height="5.73"/>
+          <rect x="87.21" y="79.23" width="4.18" height="19.49"/>
+          <rect x="91.39" y="79.23" width="4.18" height="19.49"/>
+          <rect x="95.57" y="98.71" width="4.18" height="0.01"/>
+          <rect x="99.75" y="88.4" width="4.18" height="10.32"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-12">
+    <text x="16.96" y="98.71" text-anchor="end" dy="0.35em">0</text>
+    <text x="16.96" y="75.79" text-anchor="end" dy="0.35em">20</text>
+    <text x="16.96" y="52.86" text-anchor="end" dy="0.35em">40</text>
+    <text x="16.96" y="29.93" text-anchor="end" dy="0.35em">60</text>
+    <text x="16.96" y="7" text-anchor="end" dy="0.35em">80</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-13">
+    <text x="8.81" y="50.86" text-anchor="middle" dy="0.35em" transform="rotate(-90, 8.81, 52.86)"># assets</text>
+  </g>
+</g>
+<defs>
+<clipPath id="fig-80f08eee92fc45a5bbdb0a0974dabaf5-element-5">
+  <path d="M17.96,5 L 115 5 115 100.72 17.96 100.72" />
+</clipPath
+></defs>
+</svg>
