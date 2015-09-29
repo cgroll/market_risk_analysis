@@ -11,8 +11,8 @@ println("--------------------------------\n")
 ipythonInstalled = true
 try
     for f in ijuliaFileNames
-        run(`ipython nbconvert notebooks/$(f).ipynb --to python`)
-        run(`mv $(f).py nbconvert_html/$(f).html`)
+        run(`ipython nbconvert notebooks/$(f).ipynb --to html`)
+        run(`mv $(f).html nbconvert_html/$(f).html`)
         run(`ipython nbconvert notebooks/$(f).ipynb --to python`)
         run(`mv $(f).py nbconvert_jl/$(f).jl`)
     end
