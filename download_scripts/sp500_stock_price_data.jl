@@ -1,11 +1,33 @@
 using EconDatasets
 
-include(joinpath(Pkg.dir(),
-                 "EconDatasets/src/getDataset/getSP500.jl"))
+## specify date range
+dates = Date(1960,1,1):Date(2015,9,25)
 
-dataPath = joinpath(Pkg.dir(),
-                    "EconDatasets/data/SP500.csv")
+## allow parallelization
+procIds = addprocs(3)
+    
+@everywhere using DataFrames
+@everywhere using TimeData
+@everywhere using EconDatasets
+    
+## load WikiPedia stock ticker symbols
+constituents = readcsv("financial_data/raw_data/SP500TickerSymbols.csv")
+    
+tickerSymb = ASCIIString[ticker for ticker in constituents]
 
-newDataPath = "financial_data/raw_data/SP500.csv"
+## measure time
+t0 = time()
 
-cp(dataPath, newDataPath)
+@time vals = readYahooAdjClose(dates, tickerSymb, :d)
+
+t1 = time()
+elapsedTime = t1-t0
+mins, secs = divrem(elapsedTime, 60)
+
+valsTn = convert(Timenum, vals)
+pathToStore = "financial_data/raw_data/SP500.csv"
+writeTimedata(pathToStore, valsTn)
+
+println("elapsed time: ", int(mins), " minutes, ", ceil(secs), " seconds")
+
+rmprocs(procIds)
