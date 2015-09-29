@@ -72,6 +72,10 @@ print-%:
 help:
 	$(MAKE) --print-data-base --question
 
+.PHONY: nbconvert
+nbconvert:
+	julia utils/nbconvert.jl
+
 .PHONY: clean
 clean:
 	rm -f Makefile~
