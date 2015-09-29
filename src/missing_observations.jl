@@ -21,4 +21,4 @@ nObsHist = plot(x=convert(Array, obsPerStock), Geom.histogram(bincount = 20),
                 Guide.xlabel("# observations"),
                 Guide.ylabel("# assets"))
 
-draw(SVG("pics/missing_observations-1.svg", 12cm, 12cm), nObsHist)
+draw(SVG("pics/missing_observations-1.svg", 24cm, 12cm), nObsHist)
