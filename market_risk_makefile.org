@@ -14,113 +14,70 @@ information that we draw from this data:
 - applications
 
 
-** Data
+** Structure
 
-At the core of the research project always lies a sequence of
-computationally demanding scripts that produce the data. These scripts
-are usually stored in the directory *./process_data*. Furthermore, all
-data scripts should produce data exclusively, and any visualizations
-as a means to get a feeling for the data should always be in separate
-files. This way, the core of the project will be specified robustly in
-a clear sequence of computational steps, while any second-layer
-visualization scripts could be dealt with in a more automatic manner.
-Also, the core of the project should completely match the outline
-diagram. Never make any changes in the pure exported code files, but
-only in the code blocks embedded in the analysis.
+Distinguish between steps that create data and steps that analyze
+data:
+- strictly divide them: a script may either create relevant data or
+  analyze it
+- outline diagram for project with core data creation
+- there exist several data directories: 
+	- one submodule directory for proprietary data
+	- a directory in this repository itself for non-proprietary data
+     that may be made publicly available
+- visualization rules could be made more automatic:
+	- not each graphic needs to be specified as individual target
+	- script and graphics share pattern of file name
+	- multiple graphics per script possible
+	- every graphics will be uniquely identified with a combination of
+     script file name and a number
+	- e.g., for a given script *creation.jl*, all associated graphics
+     must follow the naming convention *creation-1.pdf*,
+     *creation-2.pdf*, and so forth.
+- Jupyter notebooks:
+	- if it should be desirable to have text with code mixed together
+     this could be done in a Jupyter notebook
+	- code from notebooks can be exported to .jl files and be included
+     into the build process
 
-** Graphics
+* Setup targets
 
-As I am very fond of visualizations, any research project usually
-involves a bunch of graphics that need to be produced. Hence, I want
-to automate this process a bit, such that it is not necessary to
-manually include every figure as a target into the Makefile.
-Therefore, we must enable GNU Make to automatically find the link
-between graphics and the script for its creation. This can be achieved
-by letting graphics and script share some pattern for the file name.
-In addition to that, however, we do not want to have one script per
-graphics, but also situations where we get multiple graphics with one
-script. Hence, the convention will be as follows: every graphics
-created from a script will be uniquely identified with a combination
-of script file name and a number. For example, for a given script
-*creation.R*, all associated graphics must follow the naming
-convention *creation-1.pdf*, *creation-2.pdf*, and so forth.
-
-** org-mode: tangling code
-
-In order to avoid the risks associated with code duplicity, any line
-of code may only exist once! Hence, whenever some parts of code should
-be published together with explanatory text, the code must be written
-in tangled org-babel source code blocks and only exported into files.
-Be careful to tangle all source code blocks that are relevant for a
-given computational script. Nevertheless, on the other hand, also
-avoid touching too many files, which would result in unnecessary
-computations with GNU Make.
-
-* Setup
-
-By default, GNU Make will always build the first target of a Makefile
-if called without additional arguments. Hence, this target should
-rather be some high-level output, comprising all individual targets to
-be built. The definition of such a high-level output usually already
-refers to some low-level variables as well, which need to be already
-known by GNU Make at the time that they are referred to. Hence, we
-first need to determine all constituting low-level targets. The
-recipes for creation are allowed to follow only afterwards.
+- define sub-targets and directories:
+	- PICS_DIR: storage of re-creatable pictures
+	- PRIV_DATA_DIR: storage re-creatable proprietary data
+	- DATA_DIR: storage re-creatable data
+	- DATA_SRC: library of Julia files to create data
+	- PICS_SRC: Julia files to create pictures
 
 ** Directories
 
-First, one needs to set up the project directories, to tell GNU Make
-where the target files should be looked for. Also, we need to point to
-the directory of the scripts that are necessary to generate the
-graphics.
 #+BEGIN_SRC makefile :tangle ./Makefile
 # gnu makefile for cfm
 
 PROJ_DIR := .
 PICS_DIR := pics
+PRIV_DATA_DIR := financial_data
 DATA_DIR := data
-JL_DIR := jlib
-R_LIB := rlib
-R_PICS := rpics
+DATA_SRC := data_src
+PICS_SRC := src
 
 #+END_SRC
 
-Since "at the end of the line" comments do not work in GNU Makefile,
-a description of what the individual folders should contain is
-followed here:
-- PICS_DIR: storage of re-creatable pictures
-- DATA_DIR: storage re-creatable data
-- R_PICS: R code for re-creatable pictures 
-- R_LIB: library of R utilities
-- JL_DIR: library of Julia utilities
-
-For publication with org-mode, I sometimes need to run some
-pre-processing of the org-mode files upfront. The required processing
-functions are in emacs-lisp, and GNU Make needs to know about their
-location as well:
-#+BEGIN_SRC makefile :tangle ./Makefile
-# include relevant emacs lisp files for publication
-LISP_SITE := /home/chris/.emacs.d/extensions/own_commands.el
-#+END_SRC
 
 ** Specify data targets
 
-For clarity, data targets are better grouped into related subparts,
-instead of keeping them in one large opaque list. For me, there
-usually already arises some arrangement related to the decomposition
-into individual blog posts. Once the target files are defined for each
-subpart, we throw them together and prepend the file directory.
+- data targets are grouped into related subparts
+- once the target files are defined for each subpart, we throw them
+  together and prepend the file directory.
 
 #+BEGIN_SRC makefile :tangle ./Makefile
 ############################################################
 ############## SPECIFY MAIN DATA FOR EACH PROCESSING SCRIPT:
 ############################################################
 
-SP500_DOWNLOAD := all_sp500_price_data.csv all_sp500_clean_logRet.csv
-SP500_GARCH := standResid.csv estimatedSigmas.csv
-SP500_SECTORS := sectorAffiliation.csv
-DATA_NAMES := $(SP500_DOWNLOAD) $(SP500_GARCH) $(SP500_SECTORS)
-DATA_FULL_NAMES := $(addprefix $(DATA_DIR)/,$(DATA_NAMES))
+SP500_RAW_DATA := raw_data/SP500.csv
+DATA_NAMES := $(SP500_RAW_DATA)
+DATA_FULL_NAMES := $(addprefix $(PRIV_DATA_DIR)/,$(DATA_NAMES))
 
 #+END_SRC
 
@@ -202,16 +159,16 @@ order to able to delete all graphics files if necessary.
 ############## CREATION OF PDFS
 ################################################
 
-# get list of all rpics files
-RPICS_SCRIPTS_NAMES := $(notdir $(wildcard $(R_PICS)/*.R))
-RPICS_FILE_NAMES := $(patsubst %.R,%-1.pdf,$(RPICS_SCRIPTS_NAMES))
+# get list of all Julia source files for graphics
+PICS_SCRIPTS_NAMES := $(notdir $(wildcard $(PICS_SRC)/*.jl))
+PICS_FILE_NAMES := $(patsubst %.jl,%-1.pdf,$(PICS_SCRIPTS_NAMES))
 #RPICS_FILE_NAMES := missing_values-1.pdf visualize_volatilities-1.pdf market_trend_power-1.pdf
-RPICS_FULL_NAMES := $(addprefix $(PICS_DIR)/,$(RPICS_FILE_NAMES)) 
+PICS_FULL_NAMES := $(addprefix $(PICS_DIR)/,$(PICS_FILE_NAMES)) 
 
-RPICS_FILE_NAMES_FOR_DELETION := $(patsubst %.R,%-*.pdf,$(RPICS_SCRIPTS_NAMES))
+PICS_FILE_NAMES_FOR_DELETION := $(patsubst %.jl,%-*.pdf,$(PICS_SCRIPTS_NAMES))
 
-#ALL_PICS_FULL_NAMES := $(RPICS_FULL_NAMES) $(MPICS_FULL_NAMES) $(JLPICS_FULL_NAMES)
-ALL_PICS_FULL_NAMES := $(RPICS_FULL_NAMES)
+# add possibility to add other pictures also
+ALL_PICS_FULL_NAMES := $(PICS_FULL_NAMES)
 
 #+END_SRC
 
@@ -243,7 +200,8 @@ data: $(DATA_FULL_NAMES)
 The data files lie at the very core of the project. Individual data
 files are interrelated, so that they need to be created in a certain
 sequential order. Thus, it is really hard to come up with some
-procedure to automatically create the recipes for the data files. The
+
+* procedure to automatically create the recipes for the data files. The
 recipes hence will be listed manually. For each target data, you will
 need to specify all the data that it depends on, as well as the script
 file that is required for its computation.
@@ -253,26 +211,8 @@ file that is required for its computation.
 ############## CREATION OF MAIN_DATA:
 ###############################################
 
-$(DATA_DIR)/all_sp500_price_data.csv: raw_data/sp500_constituents.csv process_data/download_sp500_data.R
-	R CMD BATCH process_data/download_sp500_data.R 
-	cp $@ ~/Dropbox/research_databases/cfm/data/
-
-$(DATA_DIR)/all_sp500_clean_logRet.csv: $(DATA_DIR)/all_sp500_price_data.csv process_data/sp500_clean_rets.R
-	R CMD BATCH process_data/sp500_clean_rets.R 
-	cp $@ ~/Dropbox/research_databases/cfm/data/
-
-$(DATA_DIR)/standResid.csv: $(DATA_DIR)/all_sp500_clean_logRet.csv process_data/sp500_estimate_garch.R
-	R CMD BATCH process_data/sp500_estimate_garch.R
-	cp $@ ~/Dropbox/research_databases/cfm/data/
-
-$(DATA_DIR)/estimatedSigmas.csv: $(DATA_DIR)/all_sp500_clean_logRet.csv process_data/sp500_estimate_garch.R
-	R CMD BATCH process_data/sp500_estimate_garch.R
-	cp $@ ~/Dropbox/research_databases/cfm/data/
-
-$(DATA_DIR)/sectorAffiliation.csv: process_data/sp500_sectors.R $(DATA_DIR)/all_sp500_clean_logRet.csv raw_data/sp500_sector_constituents.csv 
-	R CMD BATCH $<
-	cp $@ ~/Dropbox/research_databases/cfm/data/
-
+$(PRIV_DATA_DIR)/raw_data/SP500.csv: download_scripts/sp500_stock_price_data.jl
+	julia download_scripts/sp500_stock_price_data.jl
 
 #+END_SRC
 
@@ -295,48 +235,11 @@ prerequisite.
 
 #+BEGIN_SRC makefile :tangle ./Makefile
 # recipe for r graphics
-$(addprefix $(PICS_DIR)/,$(RPICS_FILE_NAMES)): $(PICS_DIR)/%-1.pdf: $(R_PICS)/%.R
+$(addprefix $(PICS_DIR)/,$(PICS_FILE_NAMES)): $(PICS_DIR)/%-1.pdf: $(PICS_SRC)/%.jl
 	make data
-	R CMD BATCH $<
-
-# recipe for matlab graphics: preliminary!
-$(addprefix $(PICS_DIR)/,$(MPICS_FILE_NAMES)): $(PICS_DIR)/%-1.pdf: $(R_PICS)/%.m
-	make data
-	matlab $<
+	julia $<
 
 #+END_SRC
-
-* Presentation outputs
-
-- blog posts
-- html files for individual sub-parts
-- slide-shows 
-- one large file consisting of all individual blog posts
-- one large file that will build on figures and tables created by the
-  individual blog posts, but that will be more rigorously following
-  scientific standards so that it could be handed in as a thesis
-- copying files to dropbox to make them publicly available
-
-** Thesis output
-Here, the thesis output will be created in the file cfm_main.org, but
-shall be available as file copula_factor_models.pdf.
-
-#+BEGIN_SRC makefile :tangle ./Makefile
-# specify overall pdf document output
-MAIN_FILE := copula_factor_models.pdf
-# generated overall pdf output, with wrong name
-MID_TARGET := cfm_main.pdf
-
-$(MAIN_FILE): $(MID_TARGET)
-	cp $^ $@
-
-# create pdf document from latex file
-$(MID_TARGET): cfm_main.org $(ALL_PICS_FILE_NAMES)
-	emacs --batch --visit=cfm_main.org --load $(LISP_SITE) --funcall cg/change-latex-src-headers --funcall org-export-as-pdf
-
-#+END_SRC
-
-
 
 * Other helpful phony targets
 #+BEGIN_SRC makefile :tangle ./Makefile
@@ -357,27 +260,15 @@ help:
 
 .PHONY: clean
 clean:
-	rm -f $(MID_TARGET)
 	rm -f Makefile~
-	rm -f $(basename $(MID_TARGET)).tex~
-	rm -f $(basename $(MID_TARGET)).bbl
-	rm -f $(basename $(MID_TARGET)).blg
-
-.PHONY: view
-view:
-	make
-	okular $(MAIN_FILE) &
-
 
 # in case pics-3.pdf has been deleted, while pics-1.pdf still exists,
 # updating rule for figures does not reproduce pics-3.pdf
-.PHONY: renew_all_r_pics
-renew_all_r_pics:
-	cd pics; rm -v $(RPICS_FILE_NAMES_FOR_DELETION); cd ../; make
+.PHONY: renew_all_julia_pics
+renew_all_julia_pics:
+	cd pics; rm -v $(PICS_FILE_NAMES_FOR_DELETION); cd ../; make
 
 new:
-	rm -f $(MID_TARGET)
-	rm -f $(MAIN_FILE)
 	make
 
 #+END_SRC
