@@ -12,7 +12,7 @@ PICS_SRC := src
 ############## SPECIFY MAIN DATA FOR EACH PROCESSING SCRIPT:
 ############################################################
 
-SP500_RAW_DATA := raw_data/SP500.csv
+SP500_RAW_DATA := raw_data/SP500TickerSymbols.csv raw_data/SP500.csv 
 DATA_NAMES := $(SP500_RAW_DATA)
 DATA_FULL_NAMES := $(addprefix $(PRIV_DATA_DIR)/,$(DATA_NAMES))
 
@@ -43,7 +43,10 @@ data: $(DATA_FULL_NAMES)
 ############## CREATION OF MAIN_DATA:
 ###############################################
 
-$(PRIV_DATA_DIR)/raw_data/SP500.csv: download_scripts/sp500_stock_price_data.jl
+$(PRIV_DATA_DIR)/raw_data/SP500TickerSymbols.csv:
+	cp $(HOME)/research/julia/EconDatasets/data/SP500TickerSymbols.csv $@
+
+$(PRIV_DATA_DIR)/raw_data/SP500.csv: download_scripts/sp500_stock_price_data.jl $(PRIV_DATA_DIR)/raw_data/SP500TickerSymbols.csv
 	julia download_scripts/sp500_stock_price_data.jl
 
 # recipe for r graphics
