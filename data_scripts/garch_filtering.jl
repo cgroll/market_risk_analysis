@@ -27,6 +27,7 @@ end
     estimatedSigmas = DataFrame()
     for ii=1:nAss
         display(ii)
+        println("\n")
         gFit = fit(GARCH_1_1{Normal}, logRets[ii])
         estimatedParams[ii, 1:4] = [gFit.model.μ, gFit.model.κ,
                                     gFit.model.α, gFit.model.β]
@@ -65,6 +66,7 @@ writetable("public_data/garch_norm_sigmas.csv", estimatedSigmasDf)
     estimatedSigmas = DataFrame()
     for ii=1:nAss
         display(ii)
+        println("\n")
         gFit = fit(GARCH_1_1{TDist}, logRets[ii])
         estimatedParams[ii, 1:4] = [gFit.model.μ, gFit.model.κ,
                                     gFit.model.α, gFit.model.β]

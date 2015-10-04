@@ -231,8 +231,8 @@ $(PRIV_DATA_DIR)/processed_data/SP500.csv: src/pick_sp500_data.jl $(PRIV_DATA_DI
 $(PRIV_DATA_DIR)/raw_data/index_data.csv: download_scripts/index_price_data.jl
 	julia download_scripts/index_price_data.jl
 
-public_data/garch_norm_params.csv: src/garch_filtering.jl $(PRIV_DATA_DIR)/processed_data/SP500.csv
-	julia src/garch_filtering.jl
+public_data/garch_norm_params.csv: data_scripts/garch_filtering.jl $(PRIV_DATA_DIR)/processed_data/SP500.csv
+	julia data_scripts/garch_filtering.jl
 
 #+END_SRC
 
