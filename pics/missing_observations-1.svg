@@ -9,36 +9,36 @@
      stroke-width="0.3"
      font-size="3.88"
 >
-<g class="plotroot xscalable yscalable" id="fig-e818975cb55f45e9be86ef114a0eee06-element-1">
-  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-e818975cb55f45e9be86ef114a0eee06-element-2">
+<g class="plotroot xscalable yscalable" id="fig-d654855130b04f0e8b25f258a7d76d19-element-1">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-d654855130b04f0e8b25f258a7d76d19-element-2">
     <text x="86.48" y="72" text-anchor="middle"># observations</text>
   </g>
-  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-e818975cb55f45e9be86ef114a0eee06-element-3">
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-d654855130b04f0e8b25f258a7d76d19-element-3">
     <text x="19.96" y="64.39" text-anchor="middle">0</text>
     <text x="64.31" y="64.39" text-anchor="middle">5000</text>
     <text x="108.65" y="64.39" text-anchor="middle">10000</text>
     <text x="153" y="64.39" text-anchor="middle">15000</text>
   </g>
-  <g clip-path="url(#fig-e818975cb55f45e9be86ef114a0eee06-element-5)" id="fig-e818975cb55f45e9be86ef114a0eee06-element-4">
-    <g pointer-events="visible" opacity="1" fill="#000000" fill-opacity="0.000" stroke="#000000" stroke-opacity="0.000" class="guide background" id="fig-e818975cb55f45e9be86ef114a0eee06-element-6">
+  <g clip-path="url(#fig-d654855130b04f0e8b25f258a7d76d19-element-5)" id="fig-d654855130b04f0e8b25f258a7d76d19-element-4">
+    <g pointer-events="visible" opacity="1" fill="#000000" fill-opacity="0.000" stroke="#000000" stroke-opacity="0.000" class="guide background" id="fig-d654855130b04f0e8b25f258a7d76d19-element-6">
       <rect x="17.96" y="5" width="137.04" height="55.72"/>
     </g>
-    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-e818975cb55f45e9be86ef114a0eee06-element-7">
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-d654855130b04f0e8b25f258a7d76d19-element-7">
       <path fill="none" d="M17.96,58.71 L 155 58.71"/>
       <path fill="none" d="M17.96,45.79 L 155 45.79"/>
       <path fill="none" d="M17.96,32.86 L 155 32.86"/>
       <path fill="none" d="M17.96,19.93 L 155 19.93"/>
       <path fill="none" d="M17.96,7 L 155 7"/>
     </g>
-    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-e818975cb55f45e9be86ef114a0eee06-element-8">
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="fig-d654855130b04f0e8b25f258a7d76d19-element-8">
       <path fill="none" d="M19.96,5 L 19.96 60.72"/>
       <path fill="none" d="M64.31,5 L 64.31 60.72"/>
       <path fill="none" d="M108.65,5 L 108.65 60.72"/>
       <path fill="none" d="M153,5 L 153 60.72"/>
     </g>
-    <g class="plotpanel" id="fig-e818975cb55f45e9be86ef114a0eee06-element-9">
-      <g shape-rendering="crispEdges" stroke-width="0.3" id="fig-e818975cb55f45e9be86ef114a0eee06-element-10">
-        <g stroke="#000000" stroke-opacity="0.000" fill="#00BFFF" class="geometry" id="fig-e818975cb55f45e9be86ef114a0eee06-element-11">
+    <g class="plotpanel" id="fig-d654855130b04f0e8b25f258a7d76d19-element-9">
+      <g shape-rendering="crispEdges" stroke-width="0.3" id="fig-d654855130b04f0e8b25f258a7d76d19-element-10">
+        <g stroke="#000000" stroke-opacity="0.000" fill="#00BFFF" class="geometry" id="fig-d654855130b04f0e8b25f258a7d76d19-element-11">
           <rect x="20.62" y="49.66" width="5.68" height="9.05"/>
           <rect x="26.6" y="50.31" width="5.68" height="8.4"/>
           <rect x="32.58" y="52.9" width="5.68" height="5.82"/>
@@ -63,19 +63,19 @@
       </g>
     </g>
   </g>
-  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-e818975cb55f45e9be86ef114a0eee06-element-12">
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="fig-d654855130b04f0e8b25f258a7d76d19-element-12">
     <text x="16.96" y="58.71" text-anchor="end" dy="0.35em">0</text>
     <text x="16.96" y="45.79" text-anchor="end" dy="0.35em">20</text>
     <text x="16.96" y="32.86" text-anchor="end" dy="0.35em">40</text>
     <text x="16.96" y="19.93" text-anchor="end" dy="0.35em">60</text>
     <text x="16.96" y="7" text-anchor="end" dy="0.35em">80</text>
   </g>
-  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-e818975cb55f45e9be86ef114a0eee06-element-13">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="fig-d654855130b04f0e8b25f258a7d76d19-element-13">
     <text x="8.81" y="30.86" text-anchor="middle" dy="0.35em" transform="rotate(-90, 8.81, 32.86)"># assets</text>
   </g>
 </g>
 <defs>
-<clipPath id="fig-e818975cb55f45e9be86ef114a0eee06-element-5">
+<clipPath id="fig-d654855130b04f0e8b25f258a7d76d19-element-5">
   <path d="M17.96,5 L 155 5 155 60.72 17.96 60.72" />
 </clipPath
 ></defs>
