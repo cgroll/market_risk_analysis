@@ -8,6 +8,10 @@ println(" Converting ijulia notebooks\n")
 println("--------------------------------")
 println("--------------------------------\n")
 
+println("Warning: make sure that the following directories exist:\n")
+println(" * nbconvert_html\n")
+println(" * nbconvert_jl\n")
+
 ipythonInstalled = true
 try
     for f in ijuliaFileNames
