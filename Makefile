@@ -46,14 +46,17 @@ data: $(DATA_FULL_NAMES)
 $(PRIV_DATA_DIR)/raw_data/SP500TickerSymbols.csv:
 	cp $(HOME)/research/julia/EconDatasets/data/SP500TickerSymbols.csv $@
 
+$(PRIV_DATA_DIR)/raw_data/SP500IndustryAffil.csv:
+	cp $(HOME)/research/julia/EconDatasets/data/SP500Industries.csv $@
+
 $(PRIV_DATA_DIR)/raw_data/SP500.csv: download_scripts/sp500_stock_price_data.jl $(PRIV_DATA_DIR)/raw_data/SP500TickerSymbols.csv
 	julia download_scripts/sp500_stock_price_data.jl
 
-$(PRIV_DATA_DIR)/raw_data/index_data.csv:
+$(PRIV_DATA_DIR)/raw_data/index_data.csv: download_scripts/index_price_data.jl
 	julia download_scripts/index_price_data.jl
 
-$(PRIV_DATA_DIR)/raw_data/SP500IndustryAffil.csv:
-	cp $(HOME)/research/julia/EconDatasets/data/SP500Industries.csv $@
+public_data/garch_norm_params.csv: src/garch_filtering.jl $(PRIV_DATA_DIR)/processed_data/SP500.csv
+	julia src/garch_filtering.jl
 
 # recipe for graphics
 $(addprefix $(PICS_DIR)/,$(PICS_FILE_NAMES)): $(PICS_DIR)/%-1.svg: $(PICS_SRC)/%.jl
