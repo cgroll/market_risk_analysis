@@ -53,8 +53,10 @@ end
 
 names!(estimatedSigmasDf, names(logRets)[1:nAss])
 
+estimatedSigmasTn = Timenum(estimatedSigmasDf, idx(logRets))
+
 writetable("public_data/garch_norm_params.csv", estimatedParamsDf)
-writetable("public_data/garch_norm_sigmas.csv", estimatedSigmasDf)
+writeTimedata("public_data/garch_norm_sigmas.csv", estimatedSigmasTn)
 
 ## GARCH(1,1), t innovations
 ##--------------------------
@@ -93,6 +95,8 @@ end
 
 names!(estimatedSigmasDf, names(logRets)[1:nAss])
 
+estimatedSigmasTn = Timenum(estimatedSigmasDf, idx(logRets))
+
 writetable("public_data/garch_t_params.csv", estimatedParamsDf)
-writetable("public_data/garch_t_sigmas.csv", estimatedSigmasDf)
+writeTimedata("public_data/garch_t_sigmas.csv", estimatedSigmasTn)
 
