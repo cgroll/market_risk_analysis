@@ -76,8 +76,13 @@ PICS_SRC := src
 ############################################################
 
 SP500_RAW_DATA := raw_data/SP500TickerSymbols.csv raw_data/SP500.csv raw_data/SP500IndustryAffil.csv raw_data/index_data.csv
-DATA_NAMES := $(SP500_RAW_DATA)
-DATA_FULL_NAMES := $(addprefix $(PRIV_DATA_DIR)/,$(DATA_NAMES))
+SP500_PROCESSED_DATA := processed_data/SP500.csv
+GARCH_DATA := public_data/garch_norm_params.csv
+
+PRIV_DATA_NAMES := $(SP500_RAW_DATA) $(SP500_PROCESSED_DATA)
+PRIV_DATA_FULL_NAMES := $(addprefix $(PRIV_DATA_DIR)/,$(PRIV_DATA_NAMES))
+
+DATA_FULL_NAMES := $(PRIV_DATA_FULL_NAMES) $(GARCH_DATA)
 
 #+END_SRC
 
@@ -219,6 +224,9 @@ $(PRIV_DATA_DIR)/raw_data/SP500IndustryAffil.csv:
 
 $(PRIV_DATA_DIR)/raw_data/SP500.csv: download_scripts/sp500_stock_price_data.jl $(PRIV_DATA_DIR)/raw_data/SP500TickerSymbols.csv
 	julia download_scripts/sp500_stock_price_data.jl
+
+$(PRIV_DATA_DIR)/processed_data/SP500.csv: src/pick_sp500_data.jl $(PRIV_DATA_DIR)/raw_data/SP500.csv
+	julia src/pick_sp500_data.jl
 
 $(PRIV_DATA_DIR)/raw_data/index_data.csv: download_scripts/index_price_data.jl
 	julia download_scripts/index_price_data.jl

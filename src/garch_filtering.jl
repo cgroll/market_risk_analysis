@@ -7,7 +7,7 @@ loadPlotting()
 using Gadfly
 
 ## load data and get log returns
-pricesTm = readTimedata("financial_data/raw_data/SP500.csv")
+pricesTm = readTimedata("financial_data/processed_data/SP500.csv")
 nObs, nAss = size(pricesTm)
 logRets = 100.*price2ret(log(pricesTm), log=true)
 
