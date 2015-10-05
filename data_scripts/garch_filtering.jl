@@ -26,8 +26,7 @@ end
     estimatedParams = Array(Float64, nAss, nParams)
     estimatedSigmas = DataFrame()
     for ii=1:nAss
-        display(ii)
-        println("\n")
+        println("$ii")
         gFit = fit(GARCH_1_1{Normal}, logRets[ii])
         estimatedParams[ii, 1:4] = [gFit.model.μ, gFit.model.κ,
                                     gFit.model.α, gFit.model.β]
@@ -67,8 +66,7 @@ writeTimedata("public_data/garch_norm_sigmas.csv", estimatedSigmasTn)
     estimatedParams = Array(Float64, nAss, nParams)
     estimatedSigmas = DataFrame()
     for ii=1:nAss
-        display(ii)
-        println("\n")
+        println("$ii")
         gFit = fit(GARCH_1_1{TDist}, logRets[ii])
         estimatedParams[ii, 1:4] = [gFit.model.μ, gFit.model.κ,
                                     gFit.model.α, gFit.model.β]
